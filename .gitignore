@@ -104,6 +104,6 @@ dist
 .tern-port
 
 # Temp dev ignore
-./GAMMA
+GAMMA/*
 
 # Dev ignore
