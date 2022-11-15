@@ -1,0 +1,11 @@
+{
+  "name": "stalker-mod-translator",
+  "version": "1.0.0",
+  "description": "A little tool to auto translate any stalker Anomaly mod",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "JulianCamart <Julian.camart@gmail.com>",
+  "license": "MIT"
+}
