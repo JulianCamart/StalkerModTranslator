@@ -1,5 +1,5 @@
 // Module to translate all texts from given data
-// given format is:
+// given format for data is js object:
 // {
 //   string_table: {
 //     string: [
@@ -7,12 +7,15 @@
 //     ]
 //   }
 // }
+// CHUNK_SIZE determine items count sended to translation service
+
+/*const dotenv = require('dotenv');
+dotenv.config();*/
 
 const {TranslationServiceClient} = require('@google-cloud/translate');
-const dotenv = require('dotenv');
-dotenv.config();
 
 const CREDENTIALS = JSON.parse(process.env.CREDENTIALS)
+const CHUNK_SIZE = process.env.CHUNK_SIZE
 
 const translationClient = new TranslationServiceClient({
   credentials: CREDENTIALS,
@@ -41,9 +44,9 @@ async function translateData(chunk, targetLanguage) {
 module.exports = async (data, targetLanguage, callback) => {
   let translatedData = []
 
-  for (let i = 0; i < data.string_table.string.length; i += process.env.CHUNK_SIZE) {
+  for (let i = 0; i < data.string_table.string.length; i += CHUNK_SIZE) {
 
-    const chunk = data.string_table.string.slice(i, i + process.env.CHUNK_SIZE)
+    const chunk = data.string_table.string.slice(i, i + CHUNK_SIZE)
 
     const translatedChunk = await translateData(chunk.map(item => item.text), targetLanguage)
 
