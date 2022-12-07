@@ -8,9 +8,14 @@ exemple to translate to french --> `node index.js ./GAMMA/mods/ fr ./`
 it will read all mods inside ./GAMMA/mods and create the patch at ./
 
 ### Config
-You have to add GCloud credentials with translate api activated
 CREDENTIALS=
-You can adjust the size of each chunk sended to api
+
+You have to add GCloud credentials with translate api activated
+
 CHUNK_SIZE=10
-You can choose to translate from rus file but it could not work properly because actually only utf-8 is supported
+
+You can adjust the size of each chunk sended to api
+
 SOURCE_LANGUAGE_FILE=eng
+
+You can choose to translate from rus file but it could not work properly because actually only utf-8 is supported
