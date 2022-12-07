@@ -1,17 +1,14 @@
 // Module to translate all texts from given data
 // given format for data is js object:
 // {
-//   string_table: {
+//   string_table: [{
 //     string: [
-//       [Object], [Object]...
+//       {id: "id", text:[{$t: "text"}]}, [Object], [Object]...
 //     ]
-//   }
+//   }]
 // }
 // CHUNK_SIZE determine items count sended to translation service
-
-/*const dotenv = require('dotenv');
-dotenv.config();*/
-
+'use strict'
 const {TranslationServiceClient} = require('@google-cloud/translate');
 
 const CREDENTIALS = JSON.parse(process.env.CREDENTIALS)
@@ -37,26 +34,25 @@ async function translateData(chunk, targetLanguage) {
   for (const translation of response.translations) {
     translatedChunk.push(translation.translatedText)
   }
- 
   return translatedChunk
 }
 
 module.exports = async (data, targetLanguage, callback) => {
   let translatedData = []
 
-  for (let i = 0; i < data.string_table.string.length; i += CHUNK_SIZE) {
+  let values = data.string_table[0].string
+    for (let i = 0; i < values.length; i += CHUNK_SIZE) {
 
-    const chunk = data.string_table.string.slice(i, i + CHUNK_SIZE)
+      const chunk = values.slice(i, i + CHUNK_SIZE)    
+      const translatedChunk = await translateData(chunk.map(item => item.text[0].$t), targetLanguage)
+  
+      let j = 0
+      translatedChunk.forEach(text => {
+        translatedData.push({id: chunk[j].id, text: {$t: text}})
+        j++
+      })
+    }
 
-    const translatedChunk = await translateData(chunk.map(item => item.text), targetLanguage)
-
-    let j = 0
-    translatedChunk.forEach(text => {
-      translatedData.push({id: chunk[j].id, text: text})
-      j++
-    })
-  }
-
-  data.string_table.string = translatedData
+  data.string_table[0].string = translatedData
   callback(JSON.stringify(data))
 }
