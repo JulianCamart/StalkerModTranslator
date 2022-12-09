@@ -29,11 +29,10 @@ getTextFilesPath(modsDirPath, SOURCE_LANGUAGE_FILE, (err, XMLFileList, modFile) 
   //countModFileToTranslate += XMLFileList.length
 
   XMLFileList.forEach((XMLFile) => readXML(XMLFile, (err, data) => {
-    console.log(XMLFile)
-    if(XMLFile != "./GAMMA/mods/Darkasleif's Nimble Upgrades Guns/gamedata/configs/text/eng/st_dialogs_zaton.xml") return
-    if (err) console.error(err)
+    if (err) return console.error('[ERROR] '+ err)
 
-    getTranslatedJson(data, targetLanguage, (jsonTranslated) => {
+    getTranslatedJson(data, targetLanguage, (err, jsonTranslated) => {
+      if (err) return console.error('[ERROR] ' + err + ' Issue with ' + XMLFile)
       const newTranslatedXMLFile = path.normalize(`${outputPatch}patch_${targetLanguage}/` + XMLFile.replace(`/${SOURCE_LANGUAGE_FILE}/`, `/${targetLanguage}/`))
 
       createXMLFromJson(jsonTranslated, newTranslatedXMLFile, (err, result) => {
